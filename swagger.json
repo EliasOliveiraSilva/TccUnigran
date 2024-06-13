@@ -1,0 +1,299 @@
+{
+    "openapi": "3.0.0",
+    "info": {
+        "title": "Api UBS Virtual",
+        "description": "Api de monitoramento e gerenciamento de rotas de UBS",
+        "version": "1.0.0",
+        "contact": {
+            "name": "Support",
+            "email": "elias_amp@hotmail.com"
+        },
+        "license": {
+            "name": "ISC",
+            "url": "https://opensource.org/"
+        }
+    },
+    "servers": [
+        {
+            "url": "http://localhost:3000/",
+            "description": "Servidor local"
+        }
+    ],
+    "paths": {
+        "/users": {
+            "get": {
+                "tags": [
+                    "Usuários"
+                ],
+                "summary": "Exibe os usuários cadastrados no sistema",
+                "description": "Rota para exibição dos usuários cadastrados no sistema",
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/components/schemas/responsetUsers"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/users/{id}":{
+            "get":{
+                "tags":[
+                    "Usuários"
+                ],
+                "summary":"Busca um usuário pelo ID de cadastro",
+                "description":"Rota para busca e exibição de um usuário pelo identificador cadastrado no sistema ",
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ],
+                "parameters":[
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "ID do usuário",
+                        "required": true,
+                        "type": "string",
+                        "format": "uuid"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/responsetUsers"
+                                }
+                            }
+                        }
+                    },
+                    "204": {
+                        "description": "Nenhum usuário encontrado"
+                    }
+                }
+            }
+        },
+        "/bulletins": {
+            "post": {
+                "tags": [
+                    "Boletins"
+                ],
+                "summary": "Cadastro de boletim informativo de saúde",
+                "description": "Rota usada para cadastrar os boletins com assuntos relativos a saúde e cuidados",
+                "requestBody": {
+                    "description": "Dados necessarios para cadastro de um boletim",
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/requestBulletin"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Cadastro realizado com sucesso",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/responseBulletin"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Dados incorretos inseridos no cadastro"
+                    }
+                }
+            },
+            "get": {
+                "tags": [
+                    "Boletins"
+                ],
+                "summary": "Exibe os boletins cadastrados no sistema",
+                "description": "Rota para exibição dos boletins cadastrados no sistema",
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/components/schemas/responseBulletin"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/bulletins/{id}": {
+            "get": {
+                "tags": [
+                    "Boletins"
+                ],
+                "summary": "Busca um boletim pelo ID de cadastro",
+                "description": "Rota para busca e exibição de um boletim pelo identificador cadastrado no sistema ",
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ],
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "ID do boletim",
+                        "required": true,
+                        "type": "string",
+                        "format": "uuid"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/responseBulletin"
+                                }
+                            }
+                        }
+                    },
+                    "204": {
+                        "description": "Nenhum boletim encontrado"
+                    }
+                }
+            },
+            "patch": {
+                "tags": [
+                    "Boletins"
+                ],
+                "summary": "Altera um boletim por item ou total",
+                "description": "Rota para edição parcial ou total de um boletim pelo identificador cadastrado no sistema ",
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            },
+            "delete": {
+                "tags": [
+                    "Boletins"
+                ],
+                "summary": "Deleta um boletim pelo ID de cadastro",
+                "description": "Rota para deletar de um boletim pelo identificador cadastrado no sistema ",
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        }
+    },
+    "components": {
+        "schemas": {
+            "requestBulletin": {
+                "type": "object",
+                "properties": {
+                    "title": {
+                        "type": "string",
+                        "description": "Título do boletim cadastrado",
+                        "example": "Nova vacina contra a covid-19 chega à população em 15 dias"
+                    },
+                    "text": {
+                        "type": "string",
+                        "description": "Descrição longa sobre o tema abordado",
+                        "example": "O Ministério da Saúde confirmou a compra de 12,5 milhões de doses de vacina contra a covid-19 da farmacêutica Moderna. "
+                    },
+                    "image": {
+                        "type": "string",
+                        "description": "link com a imagem a ser exibida na capa do boletim",
+                        "example": "https://imagens.ebc.com.br/K4Jrpb2Dlw6k4w9uFmuVb9NW-wk=/1170x700/smart/https://agenciabrasil.ebc.com.br/sites/default/files/thumbnails/image/_dsc7242.jpg?itok=-yVFQiI0"
+                    }
+                }
+            },
+            "responseBulletin": {
+                "type": "object",
+                "properties": {
+                    "title": {
+                        "type": "string",
+                        "description": "Título do boletim cadastrado",
+                        "example": "Nova vacina contra a covid-19 chega à população em 15 dias"
+                    },
+                    "text": {
+                        "type": "string",
+                        "description": "Descrição longa sobre o tema abordado",
+                        "example": "O Ministério da Saúde confirmou a compra de 12,5 milhões de doses de vacina contra a covid-19 da farmacêutica Moderna. "
+                    },
+                    "image": {
+                        "type": "string",
+                        "description": "link com a imagem a ser exibida na capa do boletim",
+                        "example": "https://imagens.ebc.com.br/K4Jrpb2Dlw6k4w9uFmuVb9NW-wk=/1170x700/smart/https://agenciabrasil.ebc.com.br/sites/default/files/thumbnails/image/_dsc7242.jpg?itok=-yVFQiI0"
+                    },
+                    "id": {
+                        "type": "string",
+                        "description": "ID do boletim",
+                        "format": "uuid"
+                    }
+                }
+            },
+            "responsetUsers": {
+                "type": "object",
+                "properties": {
+                    "name": {
+                        "type": "string",
+                        "description": "Nome do usuário",
+                        "example": "Elias Oliveira"
+                    },
+                    "username": {
+                        "type": "string",
+                        "description": "Nome de usuário do sistema",
+                        "example": "elias"
+                    },
+                    "email": {
+                        "type": "string",
+                        "description": "E-mail para cadastro e identificação no sistema",
+                        "example": "elias_amp@ubs.com"
+                    },
+                    "password": {
+                        "type": "string",
+                        "description": "Senha para acesso as páginas restritas do sistema",
+                        "example": "123456"
+                    },
+                    "level": {
+                        "type": "string",
+                        "description": "Nivel de acesso ao sistema",
+                        "example": "user"
+                    }
+                }
+            }
+        },
+        "securitySchemes": {
+            "bearerAuth": {
+                "description": "Autorização de acesso utilizando JWT",
+                "type": "http",
+                "scheme": "Bearer",
+                "bearerFormat": "JWT"
+            }
+        }
+    }
+}
